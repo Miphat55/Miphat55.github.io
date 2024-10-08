@@ -158,3 +158,123 @@
                 "</div>" +
                 "</body>" +
                 "</html>";
+                function spin() {
+                    const grid = document.getElementById("slotGrid");
+                    const winAmount = document.getElementById("winAmount");
+                    let totalWin = 0;
+                  
+                    for (let i = 0; i < grid.children.length; i++) {
+                      const symbol = getRandomSymbol();
+                      grid.children[i].classList.add('spin');
+                  
+                      setTimeout(() => {
+                        grid.children[i].src = symbol;
+                        grid.children[i].classList.remove('spin');
+                  
+                        if (symbol.includes("Meme_Man")) {  // Scatter Symbol
+                          totalWin += 1000;
+                        } else if (symbol.includes("Hat")) {  // Wild Symbol
+                          totalWin += 500;
+                        } else {
+                          totalWin += 100;
+                        }
+                  
+                        if (i === grid.children.length - 1) {
+                          winAmount.textContent = `WIN ${totalWin.toFixed(2)}`;
+                          winAmount.classList.add('win-animation');
+                          setTimeout(() => {
+                            winAmount.classList.remove('win-animation');
+                          }, 2000);
+                  
+                          // เพิ่มแสงไฟแบบคาสิโน
+                          const casinoLight = document.createElement('div');
+                          casinoLight.classList.add('casino-light');
+                          document.querySelector('.slot-game').appendChild(casinoLight);
+                          setTimeout(() => {
+                            casinoLight.remove();
+                          }, 2000);
+                        }
+                      }, i * 200);  // เพิ่ม delay ให้หมุนทีละช่อง
+                    }
+                  }
+                  function spin() {
+                    const grid = document.getElementById("slotGrid");
+                    const winAmount = document.getElementById("winAmount");
+                    let totalWin = 0;
+                    let winningCombination = [];
+                  
+                    for (let i = 0; i < grid.children.length; i++) {
+                      const symbol = getRandomSymbol();
+                      grid.children[i].classList.add('spin');
+                  
+                      setTimeout(() => {
+                        grid.children[i].src = symbol;
+                        grid.children[i].classList.remove('spin');
+                  
+                        winningCombination.push(symbol);
+                  
+                        if (i === grid.children.length - 1) {
+                          // ตรวจสอบผลลัพธ์ของการหมุนสล็อต
+                          const winningResult = checkWinningCombination(winningCombination);
+                          if (winningResult) {
+                            totalWin = winningResult.amount;
+                            winAmount.textContent = `WIN ${totalWin.toFixed(2)}`;
+                            winAmount.classList.add('win-animation');
+                            setTimeout(() => {
+                              winAmount.classList.remove('win-animation');
+                            }, 2000);
+                  
+                            // เพิ่มแสงไฟแบบคาสิโน
+                            const casinoLight = document.createElement('div');
+                            casinoLight.classList.add('casino-light');
+                            document.querySelector('.slot-game').appendChild(casinoLight);
+                            setTimeout(() => {
+                              casinoLight.remove();
+                            }, 2000);
+                          } else {
+                            winAmount.textContent = `WIN 0.00`;
+                          }
+                        }
+                      }, i * 200);  // เพิ่ม delay ให้หมุนทีละช่อง
+                    }
+                  }
+                  
+                  function checkWinningCombination(combination) {
+                    // เงื่อนไขชนะ
+                    const winningConditions = [
+                      {
+                        symbols: ["Meme_Man", "Meme_Man", "Meme_Man"],
+                        amount: 10000
+                      },
+                      {
+                        symbols: ["Hat", "Hat", "Hat"],
+                        amount: 5000
+                      },
+                      {
+                        symbols: ["Star", "Star", "Star"],
+                        amount: 2000
+                      },
+                      {
+                        symbols: ["Rocket", "Rocket", "Rocket"],
+                        amount: 1000
+                      },
+                      {
+                        symbols: ["Party Popper", "Party Popper", "Party Popper"],
+                        amount: 500
+                      },
+                      {
+                        symbols: ["Slot Machine", "Slot Machine", "Slot Machine"],
+                        amount: 200
+                      }
+                    ];
+                  
+                    for (const condition of winningConditions) {
+                      if (combination[0].includes(condition.symbols[0]) &&
+                          combination[4].includes(condition.symbols[1]) &&
+                          combination[8].includes(condition.symbols[2])) {
+                        return { amount: condition.amount };
+                      }
+                    }
+                  
+                    return null;
+                  }
